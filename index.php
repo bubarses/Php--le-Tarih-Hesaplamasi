@@ -21,33 +21,34 @@ süresini hesaplar ve bitmiş yada devam ediyor cıktıısnı basar  -->
 
 
 
-<?PHP 
+<?php
+ function dateCalculate($t) {
+    $bugun = new DateTime();
+    $kalan = DateTime::createFromFormat('Y-m-d', $t);
 
- function dateCalculate( $t ) {
-    $tarih = date( 'Y-m-d' );
-
-    $date_yil = substr( $tarih, 0, 4 );
-    $date_ay = substr( $tarih, 5, 6 );
-    $date_ay_hesapla = ( int )substr( $date_ay, 0, 2 );
-    $date_gun_hesapla = ( int )substr( $date_ay, 3, 5 );
-
-    $t_yil = substr( $t, 0, 4 );
-    $t_ay = substr( $t, 5, 6 );
-    $t_ay_hesapla = ( int )substr( $t_ay, 0, 2 );
-    $t_gun_hesapla = ( int )substr( $t_ay, 3, 5 );
-    if ( $date_yil == $t_yil ) {
-        if ( $date_ay_hesapla<$t_ay_hesapla ) {
-            echo 'Süreniz Dolmuştur';
-        } else if ( $date_ay_hesapla>$t_ay_hesapla || $date_ay_hesapla == $t_ay_hesapla && $date_gun_hesapla>$t_gun_hesapla ) {
-            echo 'Süreniz Dolmuştur';
-        } else if ( $date_ay_hesapla>$t_ay_hesapla || $date_ay_hesapla == $t_ay_hesapla && $date_gun_hesapla<$t_gun_hesapla ||
-        $date_gun_hesapla == $t_gun_hesapla ) {
-            echo 'Süreniz Geçerlidir';
-        }
+    if ($kalan < $bugun) {
+        echo 'Süreniz Dolmuştur';
     } else {
-        echo 'Süresi Dolmuştur';
+        $interval = $bugun->diff($kalan);
+        
+        $kalan_yil = $interval->format('%y');
+        $kalan_ay = $interval->format('%m');
+        $kalan_gun = $interval->format('%d');
+        
+        $haftanin_gunleri = [
+            1 => 'Pazartesi',
+            2 => 'Salı',
+            3 => 'Çarşamba',
+            4 => 'Perşembe',
+            5 => 'Cuma',
+            6 => 'Cumartesi',
+            7 => 'Pazar',
+        ];
+        
+        $hangi_gun = $haftanin_gunleri[$kalan->format('N')];
+        
+        echo "Süreniz Geçerlidir. Kalan süre: $kalan_yil yıl, $kalan_ay ay, $kalan_gun gün. Son kullanma tarihi: $hangi_gun";
     }
-
 }
 
 
